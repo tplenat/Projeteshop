@@ -15,7 +15,7 @@ class Marque {
     }
 
   
-
+ 
 
     public static function fetchAll() {
         $collectionMarque = Array();
@@ -29,6 +29,8 @@ class Marque {
         return $collectionMarque;
     }
 
+    
+     
     public static function fetch($id) {
         $dba = new DBA();
         $pdo = $dba->getPDO();
@@ -39,6 +41,8 @@ class Marque {
         $marque = Marque::arrayToMarque($record);
         return $marque;
     }
+    
+    
 
     private static function arrayToMarque(Array $array) {
         $m = new Marque();
@@ -47,6 +51,7 @@ class Marque {
         $m->logo = $array["logo"];
         $m->collectionProduit = Produit::fetchAllByMarque($m);
         return $m;
+
     }
 
 

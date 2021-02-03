@@ -31,23 +31,22 @@ class Produit {
         $pdoStatement->execute();
         $recordSet = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($recordSet as $record) {
-            $collectionProduit[] = Produit::arrayToProduit($record,
+            $collectionProduit[] = Produit::arrayToProduitC($record,
                             $categorie);
         }
         return $collectionProduit;
     }
     
     public static function fetchAllByMarque(Marque $marque) {
-        $id = $marque->getIdMarque();
+        $idmarque = $marque->getIdMarque();
         $collectionProduit = array();
         $pdo = (new DBA())->getPDO();
         $pdoStatement = $pdo->prepare(Produit::$selectByIdMarque);
-        $pdoStatement->bindParam(":id", $id);
+        $pdoStatement->bindParam(":id", $idmarque);
         $pdoStatement->execute();
         $recordSet = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($recordSet as $record) {
-            $collectionProduit[] = Produit::arrayToProduit($record,
-                            $marque);
+            $collectionProduit[] = Produit::arrayToProduitM($record, $marque);
         }
         return $collectionProduit;
     }
@@ -59,7 +58,7 @@ class Produit {
         $pdoStatement = $pdo->query(Produit::$select);
         $recordSet = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($recordSet as $record) {
-            $collectionProduit[] = Produit::arrayToProduit($record);
+            $collectionProduit[] = Produit::arrayToProduitC($record);
         }
         return $collectionProduit;
     }
@@ -75,14 +74,15 @@ class Produit {
         return $produit;
     }
 
-    private static function arrayToProduit(Array $array, Categorie
-            $categorie = null, Marque $marque = null) {
+    private static function arrayToProduitC(Array $array, Categorie
+            $categorie = null) {
         $p = new Produit();
         $p->idProduit = $array["idProduit"];
         $p->libelle = $array["libelle"];
         $p->description = $array["description"];
         $p->image = $array["image"];
         $p->prix = $array["prix"];
+        
         if ($categorie == null) {
             if ($array["idCategorie"] != null) {
                 $p->categorie = Categorie::fetch($array["idCategorie"]);
@@ -93,14 +93,26 @@ class Produit {
             $p->categorie = $categorie;
         }
         
-        if ($idMarque == null) {
+        return $p;
+    }
+    
+    
+    private static function arrayToProduitM(Array $array,  Marque $marque = null) {
+        $p = new Produit();
+        $p->idProduit = $array["idProduit"];
+        $p->libelle = $array["libelle"];
+        $p->description = $array["description"];
+        $p->image = $array["image"];
+        $p->prix = $array["prix"];
+        $p->categorie= Categorie::fetch($array["idCategorie"]);
+        if ($marque == null) {
             if ($array["idMarque"] != null) {
                 $p->marque = Marque::fetch($array["idMarque"]);
             } else {
                 $p->marque = null;
             }
         } else {
-            $p->marque = $idMarque;
+            $p->marque = $marque;
         }
         
         return $p;
@@ -177,6 +189,10 @@ class Produit {
 
     public function getCategorie() {
         return $this->categorie;
+    }
+    
+    public function getMarque() {
+        return $this->marque;
     }
 
     public function getIdProduit() {

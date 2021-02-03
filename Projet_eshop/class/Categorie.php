@@ -52,8 +52,8 @@ class Categorie {
         $pdoStatement->bindParam(":idCategorie", $idCategorie);
         $pdoStatement->execute();
         $record = $pdoStatement->fetch(PDO::FETCH_ASSOC);
-        $categorie = Categorie::arrayToCategorie($record);
-        return $categorie;
+        $cat = Categorie::arrayToCategorie($record);
+        return $cat;
     }
 
     private static function arrayToCategorie(Array $array) {
