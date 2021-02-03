@@ -1,0 +1,33 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+/*
+.border{
+       border: 3px blue dashed;
+}
+*/
+.articleEtablissement{
+    padding: 2px;    
+}
+.panel-title{
+    text-align: center;
+    font-weight: bold;
+}
+.bgColorTheme{
+    background-color:#99c990;
+}
+
+.minTextBox{
+    min-width: 100px;
+}
+
+.white {
+  color: #fff;
+}
+
+.glyphicon-log-out:hover{
+    cursor:pointer;
+    color:#ef8649;
+}
