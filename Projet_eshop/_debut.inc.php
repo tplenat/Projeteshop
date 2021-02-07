@@ -176,13 +176,16 @@ include_once 'bootstrap.inc.php';
                         <td><?php echo $unProduit->getLibelle(); ?></td>
                         <td><?php echo $unProduit->getDescription(); ?></td>
                         <td><?php echo $unProduit->getPrix(); ?></td>
+                        
+                       
+                        <td><?php echo $unProduit->getImage(); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </table>
 
         <?php } ?>  
        
-
+        <img src="images/tablette/huawei14.jpg" class="w-25  px-1">
             </div>
             
             <div class="row bg-dark" style="height: 20">

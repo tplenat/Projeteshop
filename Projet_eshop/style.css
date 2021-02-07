@@ -1,3 +1,20 @@
+.container{
+     border: 2px dotted red;
+    padding: 3px;
+    
+}
+.row {
+    border: 2px solid #7451EB;
+    padding: 3px;
+}
+
+[class^="col"] {
+    padding: 1rem;
+    border: 2px solid #3FA5DB;
+}
+
+
+
 html,
 body{
 	height: 100%;
