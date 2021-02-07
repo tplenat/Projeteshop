@@ -16,6 +16,8 @@ class Produit {
     private static $insert = "insert into produit (libelle,description,image,prix,idCategorie) values (:libelle,:description,:image,:prix,:idCategorie)";
     private static $update = "update produit set libelle=:libelle,description=:description,image=:image,prix=:prix,idCategorie=:idCategorie where idProduit=:idProduit";
     private static $delete = "delete from produit where idProduit =:idProduit";
+    private  $desc = "select substring (description,1,20) from produit where idProduit = :idProduit";
+   
 
     public function compareTo(Produit $produit) {
         return $produit->idProduit == $this->idProduit;
@@ -204,7 +206,13 @@ class Produit {
     }
 
     public function getDescription() {
-        return $this->description;
+        
+        return  $this->description;
+    }
+    
+    public function getShortDescription() {
+        
+        return  $this->desc;
     }
 
     public function getPrix() {

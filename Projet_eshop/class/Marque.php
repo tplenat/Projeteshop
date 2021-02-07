@@ -8,7 +8,8 @@ class Marque {
     private $collectionProduit = array();
     private static $select = "select * from marque";
     private static $selectById = "select * from marque where id = :id";
-  
+   private static $selectByIdCategorie= "select distinct * from marque  inner join produit on id = idMarque"
+           . "where idCategorie = :idCategorie";
 
     public function compareTo(Marque $marque) {
         return $this->id == $marque->id;
@@ -28,7 +29,22 @@ class Marque {
         }
         return $collectionMarque;
     }
-
+    
+    public static function fetchAllByCategorie(Categorie $categorie) {
+        $idCategorie = $categorie->getIdCategorie();
+        $collectionMarque = array();
+        $pdo = (new DBA())->getPDO();
+        $pdoStatement = $pdo->prepare(Marque::$selectByIdCategorie);
+        $pdoStatement->bindParam(":idCategorie", $idCategorie);
+        $pdoStatement->execute();
+        $recordSet = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($recordSet as $record) {
+            $collectionMarque[] = Marque::arrayToMarque($record,
+                            $categorie);
+        }
+        return $collectionMarque;
+    }
+    
     
      
     public static function fetch($id) {
