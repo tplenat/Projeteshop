@@ -8,8 +8,8 @@ class Marque {
     private $collectionProduit = array();
     private static $select = "select * from marque";
     private static $selectById = "select * from marque where id = :id";
-   private static $selectByIdCategorie= "select distinct * from marque  inner join produit on id = idMarque"
-           . "where idCategorie = :idCategorie";
+   private static $selectByIdCategorie= "select distinct nom,id,logo from marque inner join produit on id = idMarque"
+           . " where idCategorie = :idCategorie";
 
     public function compareTo(Marque $marque) {
         return $this->id == $marque->id;
@@ -30,7 +30,7 @@ class Marque {
         return $collectionMarque;
     }
     
-    public static function fetchAllByCategorie(Categorie $categorie) {
+   public static function fetchAllByCategorie(Categorie $categorie) {
         $idCategorie = $categorie->getIdCategorie();
         $collectionMarque = array();
         $pdo = (new DBA())->getPDO();
@@ -39,14 +39,14 @@ class Marque {
         $pdoStatement->execute();
         $recordSet = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($recordSet as $record) {
-            $collectionMarque[] = Marque::arrayToMarque($record,
-                            $categorie);
+            $collectionMarque[] = Marque::arrayToMarque($record);
         }
         return $collectionMarque;
     }
     
+   
     
-     
+   
     public static function fetch($id) {
         $dba = new DBA();
         $pdo = $dba->getPDO();
@@ -58,16 +58,25 @@ class Marque {
         return $marque;
     }
     
+    public static function arrayToMarqueN(Array $array) {
+        $m = new Marque();
+        
+        $m->nom = $array["nom"];
+        
+        
+        return $m;
+    }
+
+  
     
 
-    private static function arrayToMarque(Array $array) {
+    public static function arrayToMarque(Array $array) {
         $m = new Marque();
         $m->id = $array["id"];
         $m->nom = $array["nom"];
         $m->logo = $array["logo"];
         $m->collectionProduit = Produit::fetchAllByMarque($m);
         return $m;
-
     }
 
 

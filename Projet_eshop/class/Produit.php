@@ -8,8 +8,9 @@ class Produit {
     private $prix;
     private $image;
     private $categorie; // objet de classe categorie
-    private $marque; // objet de classe categorie
+    private $marque; // objet de classe marque
     private static $selectByIdCategorie = "select * from produit where idCategorie = :idCategorie";
+    private static $selectByIdCategorieAndMarque = "select * from produit where idCategorie = :idCategorie and idMarque= :idMarque";
     private static $selectByIdMarque = "select * from produit where idMarque = :id";
     private static $select = "select * from produit";
     private static $selectById = "select * from produit where idProduit = :idProduit";
@@ -35,6 +36,24 @@ class Produit {
         foreach ($recordSet as $record) {
             $collectionProduit[] = Produit::arrayToProduitC($record,
                             $categorie);
+        }
+        return $collectionProduit;
+    }
+    
+    
+    public static function fetchAllByCategorieAndMarque(Categorie $categorie, Marque $marque) {
+        $idCategorie = $categorie->getIdCategorie();
+        $idMarque = $marque->getIdMarque();
+        $collectionProduit = array();
+        $pdo = (new DBA())->getPDO();
+        $pdoStatement = $pdo->prepare(Produit::$selectByIdCategorieAndMarque);
+        $pdoStatement->bindParam(":idCategorie", $idCategorie);
+        $pdoStatement->bindParam(":idMarque", $idMarque);
+        $pdoStatement->execute();
+        $recordSet = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($recordSet as $record) {
+            $collectionProduit[] = Produit::arrayToProduit($record,$categorie,
+                            $marque);
         }
         return $collectionProduit;
     }
@@ -74,6 +93,20 @@ class Produit {
         $record = $pdoStatement->fetch(PDO::FETCH_ASSOC);
         $produit = Produit::arrayToProduit($record);
         return $produit;
+    }
+    
+     private static function arrayToProduit(Array $array, Categorie
+            $categorie , Marque $marque) {
+        $p = new Produit();
+        $p->idProduit = $array["idProduit"];
+        $p->libelle = $array["libelle"];
+        $p->description = $array["description"];
+        $p->image = $array["image"];
+        $p->prix = $array["prix"];
+    $p->categorie = $categorie;
+    $p->marque = $marque;
+     
+        return $p;
     }
 
     private static function arrayToProduitC(Array $array, Categorie
